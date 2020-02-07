@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
   , db = require('../lib/database')
   , Tx = require('../models/tx')
   , Address = require('../models/address')
+  , AddressTx = require('../models/addresstx')
   , Richlist = require('../models/richlist')
   , Stats = require('../models/stats')
   , settings = require('../lib/settings')
@@ -26,7 +27,7 @@ function usage() {
   console.log('notes:');
   console.log('* \'current block\' is the latest created block when script is executed.');
   console.log('* The market database only supports (& defaults to) reindex mode.');
-  console.log('* If check mode finds missing data(ignoring new data since last sync),'); 
+  console.log('* If check mode finds missing data(ignoring new data since last sync),');
   console.log('  index_timeout in settings.json is set too low.')
   console.log('');
   process.exit(0);
@@ -39,17 +40,20 @@ if (process.argv[2] == 'index') {
   } else {
     switch(process.argv[3])
     {
-    case 'update':
-      mode = 'update';
-      break;
-    case 'check':
-      mode = 'check';
-      break;
-    case 'reindex':
-      mode = 'reindex';
-      break;
-    default:
-      usage();
+      case 'update':
+        mode = 'update';
+        break;
+      case 'check':
+        mode = 'check';
+        break;
+      case 'reindex':
+        mode = 'reindex';
+        break;
+      case 'reindex-rich':
+        mode = 'reindex-rich';
+        break;
+      default:
+        usage();
     }
   }
 } else if (process.argv[2] == 'market'){
@@ -63,7 +67,7 @@ function create_lock(cb) {
     var fname = './tmp/' + database + '.pid';
     fs.appendFile(fname, process.pid, function (err) {
       if (err) {
-        console.log("Error: :(  unable to create %s", fname);
+        console.log("Error: unable to create %s", fname);
         process.exit(1);
       } else {
         return cb();
@@ -79,7 +83,7 @@ function remove_lock(cb) {
     var fname = './tmp/' + database + '.pid';
     fs.unlink(fname, function (err){
       if(err) {
-        console.log("unable to remove ._. lock: %s", fname);
+        console.log("unable to remove lock: %s", fname);
         process.exit(1);
       } else {
         return cb();
@@ -140,26 +144,31 @@ is_locked(function (exists) {
                 db.get_stats(settings.coin, function(stats){
                   if (settings.heavy == true) {
                     db.update_heavy(settings.coin, stats.count, 20, function(){
+
                     });
                   }
                   if (mode == 'reindex') {
-                    Tx.remove({}, function(err) {
-                      Address.remove({}, function(err2) {
-                        Richlist.update({coin: settings.coin}, {
-                          received: [],
-                          balance: [],
-                        }, function(err3) {
-                          Stats.update({coin: settings.coin}, {
-                            last: 0,
-                          }, function() {
-                            console.log('index cleared (reindex)');
-                          });
-                          db.update_tx_db(settings.coin, 1, stats.count, settings.update_timeout, function(){
-                            db.update_richlist('received', function(){
-                              db.update_richlist('balance', function(){
-                                db.get_stats(settings.coin, function(nstats){
-                                  console.log('reindex complete (block: %s)', nstats.last);
-                                  exit();
+                    Tx.deleteMany({}, function(err) { 
+                      Address.deleteMany({}, function(err2) { 
+                        AddressTx.deleteMany({}, function(err3) {
+                          Richlist.updateOne({coin: settings.coin}, {
+                            received: [],
+                            balance: [],
+                          }, function(err3) { 
+                            Stats.updateOne({coin: settings.coin}, { 
+                              last: 0,
+                              count: 0,
+                              supply: 0,
+                            }, function() {
+                              console.log('index cleared (reindex)');
+                            }); 
+                            db.update_tx_db(settings.coin, 1, stats.count, settings.update_timeout, function(){
+                              db.update_richlist('received', function(){
+                                db.update_richlist('balance', function(){
+                                  db.get_stats(settings.coin, function(nstats){
+                                    console.log('reindex complete (block: %s)', nstats.last);
+                                    exit();
+                                  });
                                 });
                               });
                             });
@@ -184,6 +193,34 @@ is_locked(function (exists) {
                           });
                         });
                       });
+                    });
+                  } else if (mode == 'reindex-rich') {
+                    console.log('update started');
+                    db.update_tx_db(settings.coin, stats.last, stats.count, settings.check_timeout, function(){
+                      console.log('update finished');
+                      db.check_richlist(settings.coin, function(exists){
+                        if (exists == true) {
+                          console.log('richlist entry found, deleting now..');
+                      	}
+                        db.delete_richlist(settings.coin, function(deleted) {
+                          if (deleted == true) {
+                            console.log('richlist entry deleted');
+                          }
+                          db.create_richlist(settings.coin, function() {
+                            console.log('richlist created.');
+                            db.update_richlist('received', function(){
+                              console.log('richlist updated received.');
+                              db.update_richlist('balance', function(){
+                                console.log('richlist updated balance.');
+                                db.get_stats(settings.coin, function(nstats){
+                                  console.log('update complete (block: %s)', nstats.last);
+                                  exit();
+                                });
+                              });
+                            });
+                          });
+                        });
+                      }); 
                     });
                   }
                 });
