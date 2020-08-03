@@ -132,7 +132,9 @@ sync.js (located in scripts/) is used for updating the local databases. This scr
 *Example crontab; update index every minute and market data every 2 minutes*
 
 
-    */1 * * * * docker-compose up -V update
+    */1 * * * * cd /home/app/exchange && docker-compose up -V update
+    */2 * * * * cd /home/app/exchange && docker-compose up -V market
+    */5 * * * * cd /home/app/exchange && docker-compose up -V peers
 
 
     */1 * * * * docker-compose run --rm update

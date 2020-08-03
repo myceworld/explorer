@@ -23,11 +23,14 @@ mongoose.connect(dbString, function(err) {
     console.log('Aborting');
     exit();
   } else {
+    console.log('connected to database: %s', dbString);
     request({uri: 'http://app:' + settings.port + '/api/getpeerinfo', json: true}, function (error, response, body) {
+      console.log('get peer info: %s', body);
       lib.syncLoop(body.length, function (loop) {
         var i = loop.iteration();
         var port = body[i].addr.split(':')[-1];
         var address = body[i].addr.replace(':'+port,'')
+        console.log('address: %s', address);
         db.find_peer(address, function(peer) {
           if (peer) {
             // peer already exists
