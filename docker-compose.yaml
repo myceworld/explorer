@@ -21,10 +21,10 @@ services:
     restart: always
     image: "mongo:3.6.19-xenial"
 #    build: .
-    environment:
-      MONGO_INITDB_DATABASE: explorerdb
-      MONGO_INITDB_ROOT_USERNAME: imAnTeRDaROmbEdmilEr2
-      MONGO_INITDB_ROOT_PASSWORD: ioNcEpTieNipMAdsOlKH
+#    environment:
+#      MONGO_INITDB_DATABASE: explorerdb
+#      MONGO_INITDB_ROOT_USERNAME: imAnTeRDaROmbEdmilEr2
+#      MONGO_INITDB_ROOT_PASSWORD: ioNcEpTieNipMAdsOlKH
     volumes:
       - db_data:/var/lib/mongodb
 
