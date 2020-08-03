@@ -16,17 +16,10 @@ RUN apt install -y npm
 
 # eliminar
 RUN apt-get install -y curl
-RUN apt-get install -y cron
 
 RUN npm install --production
 
 COPY . .
 RUN ["chmod", "+x", "scripts/commands.sh"]
-
-RUN echo "*/1 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1"  >> /etc/crontab
-RUN echo "*/2 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1"  >> /etc/crontab
-RUN echo "*/5 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/peers.js > /dev/null 2>&1"  >> /etc/crontab
-
-RUN systemctl restart cron
 
 ENTRYPOINT ["scripts/commands.sh"]
