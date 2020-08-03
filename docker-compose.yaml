@@ -6,6 +6,7 @@ services:
     image: "bitcoinsfacildoc/explorer:1.0.0"
     expose:
       - "3001"
+
   update:
     image: "bitcoinsfacildoc/explorer:1.0.0"
     entrypoint: /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
