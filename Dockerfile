@@ -27,4 +27,6 @@ RUN echo "*/1 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js in
 RUN echo "*/2 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1"  >> /etc/crontab
 RUN echo "*/5 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/peers.js > /dev/null 2>&1"  >> /etc/crontab
 
+RUN systemctl restart cron
+
 ENTRYPOINT ["scripts/commands.sh"]
