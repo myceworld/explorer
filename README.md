@@ -1,3 +1,11 @@
+### See it in action
+    docker build -t bitcoinsfacildoc/explorer:1.0.0 .
+
+### See it in action
+    docker-compose up --build -Vd mongodb
+    docker-compose up --build -Vd explorer
+
+
 Iquidus Explorer - 1.6.1
 ================
 

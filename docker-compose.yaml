@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+  explorer:
+    restart: always
+    image: "bitcoinsfacildoc/explorer:1.0.0"
+#    build: .
+#    volumes:
+#      - ../config/frontend/env.js:/usr/share/nginx/html/env.js
+
+  db:
+    restart: always
+    image: "mongo:2.6"
+#    build: .
+    volumes:
+      - db_data:/var/lib/mongodb
+
+volumes:
+  db_data:
