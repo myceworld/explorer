@@ -4,14 +4,27 @@ services:
   explorer:
     restart: always
     image: "bitcoinsfacildoc/explorer:1.0.0"
+    ports:
+      - "3001"
 #    build: .
 #    volumes:
 #      - ../config/frontend/env.js:/usr/share/nginx/html/env.js
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../nginx:/etc/nginx/conf.d
 
   db:
     restart: always
-    image: "mongo:2.6"
+    image: "mongo:3.6.19-xenial"
 #    build: .
+    environment:
+      MONGO_INITDB_DATABASE: explorerdb
+      MONGO_INITDB_ROOT_USERNAME: imAnTeRDaROmbEdmilEr2
+      MONGO_INITDB_ROOT_PASSWORD: ioNcEpTieNipMAdsOlKH
     volumes:
       - db_data:/var/lib/mongodb
 

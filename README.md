@@ -1,9 +1,38 @@
+
+### Install Docker and docker compose
+
+
+#### Create Unix user
+SSH using root user, then create new user for the application
+```bash
+useradd -g users -s `which bash` -m app
+```
+
+##### Change user using
+```bash
+sudo usermod -a -G docker app
+su - app
+```
+
+##### Clone explorer and checkout
+```bash
+git clone https://github.com/sundanny26/explorer_iqui.git explorer
+cd explorer
+git checkout feature/myce-compose
+```
+
 ### See it in action
     docker build -t bitcoinsfacildoc/explorer:1.0.0 .
 
 ### See it in action
-    docker-compose up --build -Vd mongodb
+    docker-compose up --build -Vd db
     docker-compose up --build -Vd explorer
+
+
+### Server Reqs
+- vCPU 2
+- memory: 4GB
+- disk: 35GB
 
 
 Iquidus Explorer - 1.6.1
@@ -40,7 +69,7 @@ Create databse:
 
 Create user with read/write access:
 
-    > db.createUser( { user: "iquidus", pwd: "3xp!0reR", roles: [ "readWrite" ] } )
+    > db.createUser( { user: "imAnTeRDaROmbEdmilEr2", pwd: "ioNcEpTieNipMAdsOlKH", roles: [ "readWrite" ] } )
 
 *note: If you're using mongo shell 2.4.x, use the following to create your user:
 
