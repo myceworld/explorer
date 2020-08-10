@@ -1,5 +1,41 @@
 Iquidus Explorer - 1.6.2
-================
+=======
+
+### Install Docker and docker compose
+
+
+#### Create Unix user
+SSH using root user, then create new user for the application
+```bash
+useradd -g users -s `which bash` -m app
+```
+
+##### Change user using
+```bash
+sudo usermod -a -G docker app
+su - app
+```
+
+##### Clone explorer and checkout
+```bash
+git clone https://github.com/sundanny26/explorer_iqui.git explorer
+cd explorer
+git checkout feature/myce-compose
+```
+
+### See it in action
+    docker build -t bitcoinsfacildoc/explorer:1.0.0 .
+
+### See it in action
+    docker-compose up --build -Vd db
+    docker-compose up --build -Vd explorer update peers
+
+
+### Server Reqs
+- vCPU 2
+- memory: 4GB
+- disk: 35GB
+
 
 An open source block explorer written in node.js.
 
@@ -12,8 +48,12 @@ An open source block explorer written in node.js.
 *  [Omega Blockchain Explorer](http://explorer.omegablockchain.net/)
 *  [Sugarchain Explorer](https://1explorer.sugarchain.org/)
 *  [Florincoin](https://florincoin.info/info)
+*  [Sphere](http://sphere.iquidus.io)
+*  [Vertcoin](http://explorer.vertcoin.info/)
+*  [Vivo](http://vivo.explorerz.top:3003)
+*  [Florincoin](https://florincoin.info/info)
 *  [Maxcoin Explorer 1](https://explorer.maxcoinproject.net/)
-
+*  [Maxcoin Explorer 2](https://explorer2.maxcoinproject.net/)
 
 *Note: If you would like your instance mentioned here contact me*
 
@@ -35,7 +75,7 @@ Create databse:
 
 Create user with read/write access:
 
-    > db.createUser( { user: "iquidus", pwd: "3xp!0reR", roles: [ "readWrite" ] } )
+    > db.createUser( { user: "imAnTeRDaROmbEdmilEr2", pwd: "ioNcEpTieNipMAdsOlKH", roles: [ "readWrite" ] } )
 
 *Note: If you're using mongo shell 2.4.x, use the following to create your user:
 
@@ -96,6 +136,8 @@ sync.js (located in scripts/) is used for updating the local databases. This scr
 **crontab**
 
 *Example crontab; update index every minute and market data every 2 minutes*
+
+    */5 * * * * cd /home/app/exchange && docker-compose up -V peers
 
     */1 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
     */2 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1

@@ -1,0 +1,41 @@
+version: '3.6'
+
+services:
+  app:
+    restart: always
+    image: "bitcoinsfacildoc/explorer:1.0.0"
+    expose:
+      - "3001"
+
+  update:
+    restart: always
+    image: "bitcoinsfacildoc/explorer:1.0.0"
+    entrypoint: /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
+
+  market:
+    image: "bitcoinsfacildoc/explorer:1.0.0"
+    entrypoint: /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1
+
+  peers:
+    image: "bitcoinsfacildoc/explorer:1.0.0"
+    entrypoint: /usr/bin/nodejs scripts/peers.js > /dev/null 2>&1
+
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/config:/etc/nginx/conf.d
+      - ./nginx/cert:/etc/nginx/certs
+    links:
+      - app
+
+  db:
+    restart: always
+    image: "mongo:3.6.19-xenial"
+    volumes:
+      - db_data:/var/lib/mongodb
+
+volumes:
+  db_data:
