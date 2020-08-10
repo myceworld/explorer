@@ -26,7 +26,7 @@ git checkout feature/myce-compose
 
 ### See it in action
     docker-compose up --build -Vd db
-    docker-compose up --build -Vd explorer
+    docker-compose up --build -Vd explorer update peers
 
 
 ### Server Reqs

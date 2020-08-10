@@ -8,6 +8,7 @@ services:
       - "3001"
 
   update:
+    restart: always
     image: "bitcoinsfacildoc/explorer:1.0.0"
     entrypoint: /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
 
