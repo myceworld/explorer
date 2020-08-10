@@ -23,16 +23,20 @@ mongoose.connect(dbString, function(err) {
     console.log('Aborting');
     exit();
   } else {
-    request({uri: 'http://127.0.0.1:' + settings.port + '/api/getpeerinfo', json: true}, function (error, response, body) {
+    console.log('connected to database: %s', dbString);
+    request({uri: 'http://app:' + settings.port + '/api/getpeerinfo', json: true}, function (error, response, body) {
+      console.log('get peer info: %s', body);
       lib.syncLoop(body.length, function (loop) {
         var i = loop.iteration();
-        var address = body[i].addr.split(':')[0];
+        var port = body[i].addr.split(':')[-1];
+        var address = body[i].addr.replace(':'+port,'')
+        console.log('address: %s', address);
         db.find_peer(address, function(peer) {
           if (peer) {
             // peer already exists
             loop.next();
           } else {
-            request({uri: 'http://freegeoip.net/json/' + address, json: true}, function (error, response, geo) {
+            request({uri: 'http://api.ipstack.com/' + address + '?access_key=f6dadc097d5daf354ce2759a67cb23d9', json: true}, function (error, response, geo) {
               db.create_peer({
                 address: address,
                 protocol: body[i].version,

@@ -1,3 +1,40 @@
+
+### Install Docker and docker compose
+
+
+#### Create Unix user
+SSH using root user, then create new user for the application
+```bash
+useradd -g users -s `which bash` -m app
+```
+
+##### Change user using
+```bash
+sudo usermod -a -G docker app
+su - app
+```
+
+##### Clone explorer and checkout
+```bash
+git clone https://github.com/sundanny26/explorer_iqui.git explorer
+cd explorer
+git checkout feature/myce-compose
+```
+
+### See it in action
+    docker build -t bitcoinsfacildoc/explorer:1.0.0 .
+
+### See it in action
+    docker-compose up --build -Vd db
+    docker-compose up --build -Vd explorer update peers
+
+
+### Server Reqs
+- vCPU 2
+- memory: 4GB
+- disk: 35GB
+
+
 Iquidus Explorer - 1.6.1
 ================
 
@@ -34,7 +71,7 @@ Create databse:
 
 Create user with read/write access:
 
-    > db.createUser( { user: "iquidus", pwd: "3xp!0reR", roles: [ "readWrite" ] } )
+    > db.createUser( { user: "imAnTeRDaROmbEdmilEr2", pwd: "ioNcEpTieNipMAdsOlKH", roles: [ "readWrite" ] } )
 
 *note: If you're using mongo shell 2.4.x, use the following to create your user:
 
@@ -95,6 +132,16 @@ sync.js (located in scripts/) is used for updating the local databases. This scr
 **crontab**
 
 *Example crontab; update index every minute and market data every 2 minutes*
+
+
+    */1 * * * * cd /home/app/exchange && docker-compose up -V update
+    */2 * * * * cd /home/app/exchange && docker-compose up -V market
+    */5 * * * * cd /home/app/exchange && docker-compose up -V peers
+
+
+    */1 * * * * docker-compose run --rm update
+    */2 * * * * docker-compose run --rm market
+    */5 * * * * docker-compose run --rm peers
 
     */1 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
     */2 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1
@@ -162,3 +209,4 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
