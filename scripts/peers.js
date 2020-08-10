@@ -33,12 +33,19 @@ mongoose.connect(dbString, function(err) {
         console.log('address: %s', address);
         db.find_peer(address, function(peer) {
           if (peer) {
+            if (isNaN(peer['port']) || peer['port'].length < 2 || peer['country'].length < 1) {
+              db.drop_peers(function() {
+                console.log('Saved peers missing ports or country, dropping peers. Re-reun this script afterwards.');
+                exit();
+              });
+            }
             // peer already exists
             loop.next();
           } else {
-            request({uri: 'http://api.ipstack.com/' + address + '?access_key=f6dadc097d5daf354ce2759a67cb23d9', json: true}, function (error, response, geo) {
+            request({uri: 'https://freegeoip.app/json/' + address, json: true}, function (error, response, geo) {
               db.create_peer({
                 address: address,
+                port: port,
                 protocol: body[i].version,
                 version: body[i].subver.replace('/', '').replace('/', ''),
                 country: geo.country_name

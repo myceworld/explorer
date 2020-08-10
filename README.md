@@ -1,3 +1,5 @@
+Iquidus Explorer - 1.6.2
+=======
 
 ### Install Docker and docker compose
 
@@ -35,14 +37,17 @@ git checkout feature/myce-compose
 - disk: 35GB
 
 
-Iquidus Explorer - 1.6.1
-================
-
 An open source block explorer written in node.js.
 
 ### See it in action
 
 *  [Deutsche eMark](http://b.emark.tk/)
+*  [Vertcoin](http://explorer.vertcoin.info/)
+*  [TheHolyRogerCoin (ROGER) Explorer](https://explorer.theholyroger.com/)
+*  [CPUChain (CPU) Explorer](https://explorer.cpuchain.org/)
+*  [Omega Blockchain Explorer](http://explorer.omegablockchain.net/)
+*  [Sugarchain Explorer](https://1explorer.sugarchain.org/)
+*  [Florincoin](https://florincoin.info/info)
 *  [Sphere](http://sphere.iquidus.io)
 *  [Vertcoin](http://explorer.vertcoin.info/)
 *  [Vivo](http://vivo.explorerz.top:3003)
@@ -50,12 +55,11 @@ An open source block explorer written in node.js.
 *  [Maxcoin Explorer 1](https://explorer.maxcoinproject.net/)
 *  [Maxcoin Explorer 2](https://explorer2.maxcoinproject.net/)
 
-
-*note: If you would like your instance mentioned here contact me*
+*Note: If you would like your instance mentioned here contact me*
 
 ### Requires
 
-*  node.js >= 0.10.28
+*  node.js >= 0.10.28 (8.17.0 is advised for updated dependencies)
 *  mongodb 2.6.x
 *  *coind
 
@@ -73,7 +77,7 @@ Create user with read/write access:
 
     > db.createUser( { user: "imAnTeRDaROmbEdmilEr2", pwd: "ioNcEpTieNipMAdsOlKH", roles: [ "readWrite" ] } )
 
-*note: If you're using mongo shell 2.4.x, use the following to create your user:
+*Note: If you're using mongo shell 2.4.x, use the following to create your user:
 
     > db.addUser( { user: "username", pwd: "password", roles: [ "readWrite"] })
 
@@ -95,7 +99,7 @@ Create user with read/write access:
 
     npm start
 
-*note: mongod must be running to start the explorer*
+*Note: mongod must be running to start the explorer*
 
 As of version 1.4.0 the explorer defaults to cluster mode, forking an instance of its process to each cpu core. This results in increased performance and stability. Load balancing gets automatically taken care of and any instances that for some reason die, will be restarted automatically. For testing/development (or if you just wish to) a single instance can be launched with
 
@@ -133,15 +137,7 @@ sync.js (located in scripts/) is used for updating the local databases. This scr
 
 *Example crontab; update index every minute and market data every 2 minutes*
 
-
-    */1 * * * * cd /home/app/exchange && docker-compose up -V update
-    */2 * * * * cd /home/app/exchange && docker-compose up -V market
     */5 * * * * cd /home/app/exchange && docker-compose up -V peers
-
-
-    */1 * * * * docker-compose run --rm update
-    */2 * * * * docker-compose run --rm market
-    */5 * * * * docker-compose run --rm peers
 
     */1 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
     */2 * * * * cd /path/to/explorer && /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1
@@ -149,17 +145,22 @@ sync.js (located in scripts/) is used for updating the local databases. This scr
 
 ### Wallet
 
-Iquidus Explorer is intended to be generic so it can be used with any wallet following the usual standards. The wallet must be running with atleast the following flags
+Iquidus Explorer is intended to be generic, so it can be used with any wallet following the usual standards. The wallet must be running with atleast the following flags
 
     -daemon -txindex
+    
+### Security
+
+Ensure mongodb is not exposed to the outside world via your mongo config or a firewall to prevent outside tampering of the indexed chain data. 
 
 ### Known Issues
 
 **script is already running.**
 
-If you receive this message when launching the sync script either a) a sync is currently in progress, or b) a previous sync was killed before it completed. If you are certian a sync is not in progress remove the index.pid from the tmp folder in the explorer root directory.
+If you receive this message when launching the sync script either a) a sync is currently in progress, or b) a previous sync was killed before it completed. If you are certian a sync is not in progress remove the index.pid and db_index.pid from the tmp folder in the explorer root directory.
 
     rm tmp/index.pid
+    rm tmp/db_index.pid
 
 **exceeding stack size**
 
@@ -209,4 +210,3 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
