@@ -1,5 +1,11 @@
 Iquidus Explorer - 1.6.2
 =======
+### Requirements for MYCE EXPLORER
+
+- 2 GB RAM
+- 50 GB DISK
+- At least 1 Core
+- 4 GB Flap Memory
 
 ### Install Docker and docker compose
 
