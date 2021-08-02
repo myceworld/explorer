@@ -35,7 +35,9 @@ services:
     restart: always
     image: "mongo:3.6.19-xenial"
     volumes:
-      - db_data:/var/lib/mongodb
+      - type: volume
+        source: db_data
+        target: /data/db
 
 volumes:
   db_data:
