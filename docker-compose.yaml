@@ -38,6 +38,10 @@ services:
       - type: volume
         source: db_data
         target: /data/db
+      - type: volume
+        source: db_config
+        target: /data/configdb
 
 volumes:
   db_data:
+  db_config:
