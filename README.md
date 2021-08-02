@@ -24,9 +24,8 @@ su - app
 
 ##### Clone explorer and checkout
 ```bash
-git clone https://github.com/sundanny26/explorer_iqui.git explorer
+git clone https://github.com/myceworld/explorer.git explorer
 cd explorer
-git checkout feature/myce-compose
 ```
 
 ### See it in action
