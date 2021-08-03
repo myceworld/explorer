@@ -31,9 +31,26 @@ cd explorer
 ### See it in action
     docker build -t bitcoinsfacildoc/explorer:1.0.0 .
 
-### See it in action
+### Start database
     docker-compose up --build -Vd db
-    docker-compose up --build -Vd explorer update peers
+
+### Create database
+
+#### Enter MongoDB container:
+    docker exec it explorer_db_1 bash
+
+#### Enter MongoDB cli:
+    mongo
+
+#### Create databse
+    use explorerdb
+
+#### Create user with read/write access:
+    db.createUser( { user: "imAnTeRDaROmbEdmilEr2", pwd: "ioNcEpTieNipMAdsOlKH", roles: [ "readWrite" ] } )
+
+### Start services
+    docker-compose up --build -Vd nginx app
+    docker-compose up --build -Vd update peers
 
 
 ### Server Reqs
