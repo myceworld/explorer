@@ -6,18 +6,34 @@ services:
     image: "bitcoinsfacildoc/explorer:1.0.0"
     expose:
       - "3001"
+    volumes:
+      - type: bind
+        source: ./settings.json
+        target: /home/explorer/settings.json
 
   update:
     restart: always
     image: "bitcoinsfacildoc/explorer:1.0.0"
+    volumes:
+      - type: bind
+        source: ./settings.json
+        target: /home/explorer/settings.json
     entrypoint: /usr/bin/nodejs scripts/sync.js index update > /dev/null 2>&1
 
   market:
     image: "bitcoinsfacildoc/explorer:1.0.0"
+    volumes:
+      - type: bind
+        source: ./settings.json
+        target: /home/explorer/settings.json
     entrypoint: /usr/bin/nodejs scripts/sync.js market > /dev/null 2>&1
 
   peers:
     image: "bitcoinsfacildoc/explorer:1.0.0"
+    volumes:
+      - type: bind
+        source: ./settings.json
+        target: /home/explorer/settings.json
     entrypoint: /usr/bin/nodejs scripts/peers.js > /dev/null 2>&1
 
   nginx:

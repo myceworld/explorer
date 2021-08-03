@@ -29,7 +29,7 @@ cd explorer
 ```
 
 ### See it in action
-    docker build -t bitcoinsfacildoc/explorer:1.0.0 .
+    docker pull bitcoinsfacildoc/explorer:1.0.0 .
 
 ### Start database
     docker-compose up --build -Vd db
